@@ -5,10 +5,10 @@
 <title>Apartman Yönetim Paneli</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{font-family:Arial;background:#f1f5f9;margin:0}
-.card{background:#fff;margin:14px;padding:14px;border-radius:12px}
-input,textarea,button{width:100%;padding:10px;margin-top:6px}
-button{background:#16a34a;color:#fff;border:none}
+body{font-family:Arial;background:#f1f5f9;margin:0;padding:10px}
+.card{background:#fff;margin:14px;padding:14px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+input,textarea,button{width:100%;padding:10px;margin-top:6px;border-radius:6px;border:1px solid #ccc}
+button{background:#16a34a;color:#fff;border:none;font-weight:bold}
 </style>
 </head>
 <body>
@@ -28,25 +28,41 @@ button{background:#16a34a;color:#fff;border:none}
 <script>
 const GAS_URL = "https://script.google.com/macros/s/AKfycbw1cyZ3iS4cm8eGNxl2vMCHKICIuLeNNIW0CZ8399vt1LNGSC5sSNUhrPrytEF6BXFB/exec";
 
+/* ===== MESAJ GÖNDER ===== */
 function gonder(){
+  const ad = document.getElementById("ad").value.trim();
+  const mesaj = document.getElementById("mesaj").value.trim();
+
+  if(!ad || !mesaj){
+    alert("Ad ve mesaj boş olamaz");
+    return;
+  }
+
   fetch(GAS_URL,{
     method:"POST",
-    headers:{ "Content-Type":"application/json" },
+    mode:"cors",
+    headers:{
+      "Content-Type":"application/json"
+    },
     body:JSON.stringify({
       action:"mesaj",
-      ad:document.getElementById("ad").value,
-      mesaj:document.getElementById("mesaj").value
+      ad:ad,
+      mesaj:mesaj
     })
   })
-  .then(r=>r.text())
-  .then(t=>alert(t))
-  .catch(e=>alert("HATA: "+e));
+  .then(r => r.text())
+  .then(t => alert(t))
+  .catch(e => alert("FETCH HATASI: " + e.message));
 }
 
+/* ===== TEST UPDATE ===== */
 function testUpdate(){
   fetch(GAS_URL,{
     method:"POST",
-    headers:{ "Content-Type":"application/json" },
+    mode:"cors",
+    headers:{
+      "Content-Type":"application/json"
+    },
     body:JSON.stringify({
       action:"update",
       row:2,
@@ -58,8 +74,9 @@ function testUpdate(){
       aktif:"1"
     })
   })
-  .then(r=>r.text())
-  .then(t=>alert(t));
+  .then(r => r.text())
+  .then(t => alert(t))
+  .catch(e => alert("FETCH HATASI: " + e.message));
 }
 </script>
 
